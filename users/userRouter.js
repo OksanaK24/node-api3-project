@@ -3,8 +3,15 @@ const users = require("./userDb");
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  // do your magic!
+router.post('/', validateUser(),  (req, res) => {
+  users
+    .insert(req.body)
+    .then(user => {
+      res.status(201).json(user)
+    })
+    .catch(() => {
+      res.status(500).json({ errorMessage: "The users information could not be retrieved." })
+    })
 });
 
 router.post('/:id/posts', (req, res) => {
@@ -30,8 +37,15 @@ router.get('/:id/posts', (req, res) => {
   // do your magic!
 });
 
-router.delete('/:id', (req, res) => {
-  // do your magic!
+router.delete('/:id', validateUserId(), (req, res) => {
+  users
+    .remove(req.user.id)
+    .then(post =>{
+        res.status(200).json(post)
+    })
+    .catch(() => {
+        res.status(500).json({ errorMessage: "The post could not be removed" })
+    })
 });
 
 router.put('/:id', (req, res) => {
@@ -61,8 +75,16 @@ function validateUserId() {
   
 }
 
-function validateUser(req, res, next) {
-  // do your magic!
+function validateUser() {
+  return (req, res, next) => {
+    if (!req.body) {
+      return res.status(400).json({ message: "missing user data" })
+    }
+    if (!req.body.name) {
+      return res.status(400).json({ message: "missing required name field" })
+    }
+    next()
+  }
 }
 
 function validatePost(req, res, next) {
