@@ -48,9 +48,17 @@ router.delete('/:id', validateUserId(), (req, res) => {
     })
 });
 
-router.put('/:id', (req, res) => {
-  // do your magic!
-});
+router.put('/:id', validateUser(), validateUserId(), (req, res) => {
+  users
+      .update(req.user.id, req.body)
+      .then(user => {
+          res.status(200).json(user)
+      })
+      .catch(() => {
+          res.status(500).json({ errorMessage: "The post information could not be modified." })
+      })
+})
+   
 
 //custom middleware
 
