@@ -1,5 +1,6 @@
 const express = require('express');
 const users = require("./userDb");
+const posts = require("../posts/postDb");
 
 const router = express.Router();
 
@@ -14,8 +15,22 @@ router.post('/', validateUser(),  (req, res) => {
     })
 });
 
-router.post('/:id/posts', (req, res) => {
-  // do your magic!
+router.post('/:id/posts', validateUserId(), validatePost(), (req, res) => {
+  
+  const body = {
+    text: req.body.text,
+    user_id: req.user.id,
+  }
+
+  posts
+    .insert(body)
+    .then(post => {
+      res.status(201).json(post)
+    })
+    .catch(() => {
+      console.log(body)
+      res.status(500).json({ errorMessage: "The users information could not be retrieved." })
+    })
 });
 
 router.get('/', (req, res) => {
@@ -33,15 +48,22 @@ router.get('/:id', validateUserId(), (req, res) => {
   res.json(req.user)
 });
 
-router.get('/:id/posts', (req, res) => {
-  // do your magic!
+router.get('/:id/posts', validateUserId(), (req, res) => {
+  users
+    .getUserPosts(req.user.id)
+    .then(post => {
+        res.status(200).json(post)
+    })
+    .catch(error =>{
+        res.status(500).json({ message: "The comments information could not be retrieved." })
+    })
 });
 
 router.delete('/:id', validateUserId(), (req, res) => {
   users
     .remove(req.user.id)
-    .then(post =>{
-        res.status(200).json(post)
+    .then(user =>{
+        res.status(200).json(user)
     })
     .catch(() => {
         res.status(500).json({ errorMessage: "The post could not be removed" })
@@ -95,8 +117,18 @@ function validateUser() {
   }
 }
 
-function validatePost(req, res, next) {
-  // do your magic!
+function validatePost() {
+  
+  return (req, res, next) => {
+
+    if (!req.body) {
+      return res.status(400).json({ message: "missing post data" })
+    }
+    if (!req.body.text) {
+      return res.status(400).json({ message: "missing required text field" })
+    }
+    next()
+  }
 }
 
 module.exports = router;
