@@ -9,8 +9,8 @@ router.get('/', (req, res) => {
     .then(post => {
         res.status(200).json(post)
     })
-    .catch(() => {
-        res.status(500).json({ errorMessage: "The posts information could not be retrieved." })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -24,8 +24,8 @@ router.delete('/:id', validatePostId(), (req, res) => {
   .then(post =>{
       res.status(200).json(post)
   })
-  .catch(() => {
-      res.status(500).json({ errorMessage: "The post could not be removed" })
+  .catch((error) => {
+    next(error)
   })
 });
 
@@ -35,8 +35,8 @@ router.put('/:id', validatePostId(), (req, res) => {
     .then(post => {
         res.status(200).json(post)
     })
-    .catch(() => {
-        res.status(500).json({ errorMessage: "The post information could not be modified." })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -53,11 +53,8 @@ function validatePostId() {
           res.status(404).json({ message: "invalid post id" })
         }
       })
-      .catch(error => {
-        console.log(error)
-        res.status(500).json({
-          message: "Error retrieving the post",
-        })
+      .catch((error) => {
+        next(error)
       })
   }
 }

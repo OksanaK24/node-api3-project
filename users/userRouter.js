@@ -10,8 +10,8 @@ router.post('/', validateUser(),  (req, res) => {
     .then(user => {
       res.status(201).json(user)
     })
-    .catch(() => {
-      res.status(500).json({ errorMessage: "The users information could not be retrieved." })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -27,9 +27,8 @@ router.post('/:id/posts', validateUserId(), validatePost(), (req, res) => {
     .then(post => {
       res.status(201).json(post)
     })
-    .catch(() => {
-      console.log(body)
-      res.status(500).json({ errorMessage: "The users information could not be retrieved." })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -39,8 +38,8 @@ router.get('/', (req, res) => {
     .then(user => {
         res.status(200).json(user)
     })
-    .catch(() => {
-        res.status(500).json({ errorMessage: "The users information could not be retrieved." })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -54,8 +53,8 @@ router.get('/:id/posts', validateUserId(), (req, res) => {
     .then(post => {
         res.status(200).json(post)
     })
-    .catch(error =>{
-        res.status(500).json({ message: "The post information could not be retrieved." })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -65,8 +64,8 @@ router.delete('/:id', validateUserId(), (req, res) => {
     .then(user =>{
         res.status(200).json(user)
     })
-    .catch(() => {
-        res.status(500).json({ errorMessage: "The user could not be removed" })
+    .catch((error) => {
+      next(error)
     })
 });
 
@@ -76,8 +75,8 @@ router.put('/:id', validateUser(), validateUserId(), (req, res) => {
     .then(user => {
         res.status(200).json(user)
     })
-    .catch(() => {
-        res.status(500).json({ errorMessage: "The user information could not be modified." })
+    .catch((error) => {
+      next(error)
     })
 })
    
@@ -95,11 +94,8 @@ function validateUserId() {
             res.status(404).json({ message: "invalid user id" })
           }
         })
-        .catch(error => {
-          console.log(error)
-          res.status(500).json({
-            message: "Error retrieving the user",
-          })
+        .catch((error) => {
+          next(error)
         })
     }
   
