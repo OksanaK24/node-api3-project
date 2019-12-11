@@ -55,7 +55,7 @@ router.get('/:id/posts', validateUserId(), (req, res) => {
         res.status(200).json(post)
     })
     .catch(error =>{
-        res.status(500).json({ message: "The comments information could not be retrieved." })
+        res.status(500).json({ message: "The post information could not be retrieved." })
     })
 });
 
@@ -66,19 +66,19 @@ router.delete('/:id', validateUserId(), (req, res) => {
         res.status(200).json(user)
     })
     .catch(() => {
-        res.status(500).json({ errorMessage: "The post could not be removed" })
+        res.status(500).json({ errorMessage: "The user could not be removed" })
     })
 });
 
 router.put('/:id', validateUser(), validateUserId(), (req, res) => {
   users
-      .update(req.user.id, req.body)
-      .then(user => {
-          res.status(200).json(user)
-      })
-      .catch(() => {
-          res.status(500).json({ errorMessage: "The post information could not be modified." })
-      })
+    .update(req.user.id, req.body)
+    .then(user => {
+        res.status(200).json(user)
+    })
+    .catch(() => {
+        res.status(500).json({ errorMessage: "The user information could not be modified." })
+    })
 })
    
 

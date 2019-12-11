@@ -2,6 +2,7 @@ const express = require("express")
 const helmet = require("helmet")
 
 const userRouter = require("./users/userRouter");
+const postRouter = require("./posts/postRouter");
 
 const server = express()
 
@@ -11,6 +12,7 @@ server.use(helmet())
 server.use(express.json())
 
 server.use("/api/users", userRouter);
+server.use("/api/users/:id/posts", postRouter);
 
 // // if no route handlers send our response, this middleware
 // // function will get called at the end of the stack.
