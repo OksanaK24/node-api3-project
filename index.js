@@ -7,7 +7,7 @@ const postRouter = require("./posts/postRouter");
 const server = express()
 
 server.use(helmet())
-// server.use(logger())
+server.use(logger())
 
 server.use(express.json())
 
@@ -28,13 +28,13 @@ server.use((err, req, res, next) => {
 	})
 })
 
-// function logger(){
-//     return (req, res, next) => {
-//         console.log(`${req.method} - ${req.url} - ${req.get(Date.now())}`)
-//         // request method, request url, and a timestamp
-//         next()
-//     }
-// }
+function logger(){
+    return (req, res, next) => {
+        console.log(`${req.method} - ${req.url} - ${req.get(Date.now().toString())}`)
+        // request method, request url, and a timestamp
+        next()
+    }
+}
 
 server.listen(4000, () => {
   console.log("\n*** Server Running on http://localhost:4000 ***\n")
